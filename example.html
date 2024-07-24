@@ -22,8 +22,8 @@
             cursor: pointer;
             background-color: white;
         }
-        .cell.green {
-            background-color: green;
+        .cell.blue {
+            background-color: blue;
             color: white;
         }
         .cell.grey {
@@ -31,7 +31,7 @@
             color: white;
             cursor: not-allowed;
         }
-        .green-numbers {
+        .blue-numbers {
             text-align: center;
             margin-top: 20px;
         }
@@ -42,6 +42,10 @@
         .paging-buttons {
             text-align: center;
             margin-top: 20px;
+        }
+        .paging-info {
+            text-align: center;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -57,9 +61,12 @@
         <button id="prevButton">Prev</button>
         <button id="nextButton">Next</button>
     </div>
-    <div class="green-numbers">
+    <div class="paging-info">
+        <span id="pagingInfo"></span>
+    </div>
+    <div class="blue-numbers">
         <strong>Numbers of selected:</strong>
-        <span id="greenNumbers"></span>
+        <span id="blueNumbers"></span>
     </div>
 
     <script>
@@ -73,7 +80,7 @@
         function createGrid() {
             const gridContainer = document.querySelector('.grid');
             gridContainer.innerHTML = ''; // Clear existing cells
-            const greyCells = getRandomNumbers(1, totalCells, 50);
+            const greyCells = getRandomNumbers(1, totalCells, 100);
 
             const start = (currentPage - 1) * cellsPerPage;
             const end = start + cellsPerPage;
@@ -97,24 +104,26 @@
             }
 
             document.addEventListener('mouseup', () => isMouseDown = false);
+            updatePagingInfo();
+            updateButtonStates();
         }
 
         function toggleColor(index) {
             if (cellStates[index] === 'white') {
-                cellStates[index] = 'green';
+                cellStates[index] = 'blue';
             } else {
                 cellStates[index] = 'white';
             }
             updateGrid();
-            updategreenNumbers();
+            updateBlueNumbers();
         }
 
         function toggleColorOnDrag(event, index) {
             if (isMouseDown) {
                 if (cellStates[index] !== 'grey') {
-                    cellStates[index] = 'green';
+                    cellStates[index] = 'blue';
                     updateGrid();
-                    updategreenNumbers();
+                    updateBlueNumbers();
                 }
             }
         }
@@ -129,12 +138,12 @@
             }
         }
 
-        function updategreenNumbers() {
-            const greenCells = cellStates.reduce((acc, color, index) => {
-                if (color === 'green') acc.push(index + 1);
+        function updateBlueNumbers() {
+            const blueCells = cellStates.reduce((acc, color, index) => {
+                if (color === 'blue') acc.push(index + 1);
                 return acc;
             }, []);
-            document.getElementById('greenNumbers').textContent = greenCells.join(', ');
+            document.getElementById('blueNumbers').textContent = blueCells.join(', ');
         }
 
         function getRandomNumbers(min, max, count) {
@@ -147,9 +156,9 @@
         }
 
         function unselectAll() {
-            cellStates = cellStates.map(color => color === 'green' ? 'white' : color);
+            cellStates = cellStates.map(color => color === 'blue' ? 'white' : color);
             updateGrid();
-            updategreenNumbers();
+            updateBlueNumbers();
         }
 
         function changePage(next) {
@@ -159,6 +168,19 @@
                 if (currentPage > 1) currentPage--;
             }
             createGrid();
+        }
+
+        function updatePagingInfo() {
+            const pagingInfo = document.getElementById('pagingInfo');
+            pagingInfo.textContent = `Page ${currentPage} of ${totalPages}, Total: ${totalCells}`;
+        }
+
+        function updateButtonStates() {
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+
+            prevButton.disabled = currentPage === 1;
+            nextButton.disabled = currentPage === totalPages;
         }
 
         window.onload = () => {
