@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grid of 100 Cells</title>
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+            max-width: 500px;
+            margin: auto;
+        }
+        .cell {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            background-color: white;
+        }
+        .cell.blue {
+            background-color: blue;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid">
+        <!-- Grid cells will be inserted here by JavaScript -->
+    </div>
+
+    <script>
+        // Function to create the grid
+        function createGrid() {
+            const gridContainer = document.querySelector('.grid');
+            for (let i = 1; i <= 100; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.textContent = i;
+                cell.addEventListener('click', toggleColor);
+                gridContainer.appendChild(cell);
+            }
+        }
+
+        // Function to toggle the background color
+        function toggleColor(event) {
+            event.target.classList.toggle('blue');
+        }
+
+        // Create the grid on page load
+        window.onload = createGrid;
+    </script>
+
+</body>
+</html>
