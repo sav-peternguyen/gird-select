@@ -26,6 +26,11 @@
             background-color: blue;
             color: white;
         }
+        .cell.grey {
+            background-color: grey;
+            color: white;
+            cursor: not-allowed;
+        }
         .blue-numbers {
             text-align: center;
             margin-top: 20px;
@@ -46,11 +51,19 @@
         // Function to create the grid
         function createGrid() {
             const gridContainer = document.querySelector('.grid');
+            const greyCells = getRandomNumbers(1, 100, 10);
+
             for (let i = 1; i <= 100; i++) {
                 const cell = document.createElement('div');
                 cell.classList.add('cell');
                 cell.textContent = i;
-                cell.addEventListener('click', toggleColor);
+
+                if (greyCells.includes(i)) {
+                    cell.classList.add('grey');
+                } else {
+                    cell.addEventListener('click', toggleColor);
+                }
+
                 gridContainer.appendChild(cell);
             }
         }
@@ -67,6 +80,16 @@
             const blueCells = document.querySelectorAll('.cell.blue');
             const blueNumbers = Array.from(blueCells).map(cell => cell.textContent).join(', ');
             document.getElementById('blueNumbers').textContent = blueNumbers;
+        }
+
+        // Function to get random unique numbers
+        function getRandomNumbers(min, max, count) {
+            const numbers = new Set();
+            while (numbers.size < count) {
+                const num = Math.floor(Math.random() * (max - min + 1)) + min;
+                numbers.add(num);
+            }
+            return Array.from(numbers);
         }
 
         // Create the grid on page load
