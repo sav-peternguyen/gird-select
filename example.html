@@ -26,12 +26,20 @@
             background-color: blue;
             color: white;
         }
+        .blue-numbers {
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
     <div class="grid">
         <!-- Grid cells will be inserted here by JavaScript -->
+    </div>
+    <div class="blue-numbers">
+        <strong>Numbers with blue background:</strong>
+        <span id="blueNumbers"></span>
     </div>
 
     <script>
@@ -49,7 +57,16 @@
 
         // Function to toggle the background color
         function toggleColor(event) {
-            event.target.classList.toggle('blue');
+            const cell = event.target;
+            cell.classList.toggle('blue');
+            updateBlueNumbers();
+        }
+
+        // Function to update the displayed blue numbers
+        function updateBlueNumbers() {
+            const blueCells = document.querySelectorAll('.cell.blue');
+            const blueNumbers = Array.from(blueCells).map(cell => cell.textContent).join(', ');
+            document.getElementById('blueNumbers').textContent = blueNumbers;
         }
 
         // Create the grid on page load
