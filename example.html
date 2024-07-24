@@ -35,19 +35,28 @@
             text-align: center;
             margin-top: 20px;
         }
+        .controls {
+            text-align: center;
+            margin: 20px;
+        }
     </style>
 </head>
 <body>
 
+    <div class="controls">
+        <button id="unselectButton">Unselect</button>
+    </div>
     <div class="grid">
         <!-- Grid cells will be inserted here by JavaScript -->
     </div>
     <div class="blue-numbers">
-        <strong>List selected:</strong>
+        <strong>Numbers of selected:</strong>
         <span id="blueNumbers"></span>
     </div>
 
     <script>
+        let isMouseDown = false;
+
         // Function to create the grid
         function createGrid() {
             const gridContainer = document.querySelector('.grid');
@@ -62,10 +71,15 @@
                     cell.classList.add('grey');
                 } else {
                     cell.addEventListener('click', toggleColor);
+                    cell.addEventListener('mousedown', () => isMouseDown = true);
+                    cell.addEventListener('mouseup', () => isMouseDown = false);
+                    cell.addEventListener('mousemove', toggleColorOnDrag);
                 }
 
                 gridContainer.appendChild(cell);
             }
+
+            document.addEventListener('mouseup', () => isMouseDown = false);
         }
 
         // Function to toggle the background color
@@ -73,6 +87,17 @@
             const cell = event.target;
             cell.classList.toggle('blue');
             updateBlueNumbers();
+        }
+
+        // Function to toggle the background color on drag
+        function toggleColorOnDrag(event) {
+            if (isMouseDown) {
+                const cell = event.target;
+                if (!cell.classList.contains('grey')) {
+                    cell.classList.add('blue');
+                    updateBlueNumbers();
+                }
+            }
         }
 
         // Function to update the displayed blue numbers
@@ -92,8 +117,18 @@
             return Array.from(numbers);
         }
 
+        // Function to unselect all blue cells
+        function unselectAll() {
+            const blueCells = document.querySelectorAll('.cell.blue');
+            blueCells.forEach(cell => cell.classList.remove('blue'));
+            updateBlueNumbers();
+        }
+
         // Create the grid on page load
         window.onload = createGrid;
+
+        // Add event listener to the Unselect button
+        document.getElementById('unselectButton').addEventListener('click', unselectAll);
     </script>
 
 </body>
